@@ -26,13 +26,19 @@ CHECK_INTERVAL = 2
 # FIREBASE
 # ==========================================================
 
-cred = credentials.Certificate(FIREBASE_CREDENTIALS)
+import os
+import json
+
+firebase_info = json.loads(os.environ["FIREBASE_JSON"])
+
+cred = credentials.Certificate(firebase_info)
 
 firebase_admin.initialize_app(
     cred,
-    {"databaseURL": DATABASE_URL}
+    {
+        "databaseURL": DATABASE_URL
+    }
 )
-
 # ==========================================================
 # GOOGLE SHEETS
 # ==========================================================
@@ -42,8 +48,10 @@ scope = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-creds = Credentials.from_service_account_file(
-    GOOGLE_CREDENTIALS,
+google_info = json.loads(os.environ["GOOGLE_SHEETS_JSON"])
+
+creds = Credentials.from_service_account_info(
+    google_info,
     scopes=scope
 )
 
